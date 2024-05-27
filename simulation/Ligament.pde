@@ -56,7 +56,7 @@ public class Ligament {
     public void show() {
         float endX = calculateEndX();
         float endY = calculateEndY();
-        strokeWeight(12);
+        strokeWeight(11);
         line((float)startX.get(), (float)startY.get(), endX, endY);
     }
     

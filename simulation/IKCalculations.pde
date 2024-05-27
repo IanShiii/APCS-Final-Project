@@ -18,7 +18,7 @@ public static class IKCalculations {
   }
   
   private static boolean isTriangleValid(float side1, float side2, float side3) {
-    return (side1 + side2) >= side3 && (side1 + side3) >= side2 && (side2 + side3) >= side1;
+    return (side1 + side2) >= side3 || (side1 + side3) >= side2 || (side2 + side3) >= side1;
   }
   
   private static float findSide(float min, float max, float side1, float side2) {
