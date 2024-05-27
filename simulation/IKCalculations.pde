@@ -6,7 +6,7 @@ public static class IKCalculations {
     float a = (float)Math.max((Math.pow(radius1, 2) - Math.pow(radius2, 2) + Math.pow(distance, 2))/(2*distance), 0);
     
     float heightMagnitude = (float)Math.sqrt(Math.max(Math.pow(radius1, 2) - Math.pow(a, 2), 0));
-    PVector heightVector = new PVector((float)(-heightMagnitude * distanceVector.mag() * Math.sin(distanceVector.heading())), (float)(heightMagnitude * distanceVector.mag() * Math.cos(distanceVector.heading())));
+    PVector heightVector = new PVector((float)(-heightMagnitude * Math.sin(distanceVector.heading())), (float)(heightMagnitude * Math.cos(distanceVector.heading())));
     
     // Calculate intersections' position
     PVector point = center1.copy().add(distanceVector.copy().normalize().mult(a));
@@ -18,7 +18,7 @@ public static class IKCalculations {
   }
   
   private static boolean isTriangleValid(float side1, float side2, float side3) {
-    return (side1 + side2) >= side3 && (side1 + side3) > side2 && (side2 + side3) > side1;
+    return (side1 + side2) >= side3 && (side1 + side3) >= side2 && (side2 + side3) >= side1;
   }
   
   private static float findSide(float min, float max, float side1, float side2) {
@@ -30,22 +30,20 @@ public static class IKCalculations {
     return 0.0;
   }
   
-  public static float[] calculateAngles(float[] ligamentLengths, PVector target, float maxDistance) {
+  public static float[] calculateAngles(float[] ligamentLengths, PVector target, float maxDistance, PVector pole) {
     ArrayList<Float> anglesArrList = new ArrayList<Float>(ligamentLengths.length);
-    
-    PVector pole = new PVector(0,0);
     
     if (target.mag() > maxDistance) {
       target.normalize().mult(maxDistance);
     }
     PVector currentSideVector = target.copy();
     
-    for (int i = ligamentLengths.length - 1; i >= 0; i--) {
+    for (int i = ligamentLengths.length - 1; i > 0; i--) {
       float currentSide = currentSideVector.mag();
       
       //find possible side
-      float[] ligamentLengthsUpToLigament = new float[i + 1];
-      arrayCopy(ligamentLengths, ligamentLengthsUpToLigament, i + 1);
+      float[] ligamentLengthsUpToLigament = new float[i];
+      arrayCopy(ligamentLengths, ligamentLengthsUpToLigament, i);
       float totalLengthUpToLigament = 0;
       for (float ligamentLength : ligamentLengthsUpToLigament) {
         totalLengthUpToLigament += ligamentLength;
