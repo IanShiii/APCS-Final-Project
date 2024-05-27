@@ -56,7 +56,13 @@ public class Ligament {
     public void show() {
         float endX = calculateEndX();
         float endY = calculateEndY();
-        strokeWeight(20);
+        strokeWeight(13);
         line((float)startX.get(), (float)startY.get(), endX, endY);
+    }
+    
+    public void showRadius() {
+      strokeWeight(1);
+      noFill();
+      ellipse(startX.get(), startY.get(), size*2, size*2);
     }
 }
