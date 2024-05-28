@@ -4,9 +4,9 @@ public class Ligament {
     private Supplier<Float> startX;
     private Supplier<Float> startY;
     private float angle;
-    private float size;
+    private Supplier<Integer> size;
 
-    public Ligament(Supplier<Float> startX, Supplier<Float> startY, float angle, float size) {
+    public Ligament(Supplier<Float> startX, Supplier<Float> startY, float angle, Supplier<Integer> size) {
         this.startX = startX;
         this.startY = startY;
         this.angle = angle;
@@ -30,15 +30,11 @@ public class Ligament {
     }
 
     public float getSize() {
-        return size;
+        return size.get();
     }
 
     public void setAngle(float angle) {
         this.angle = angle;
-    }
-
-    public void setSize(float size) {
-        this.size = size;
     }
 
     /**
@@ -46,11 +42,11 @@ public class Ligament {
      */
 
     public float calculateEndX() {
-        return startX.get() + (float)Math.cos(angle) * size;
+        return startX.get() + (float)Math.cos(angle) * size.get();
     }
 
     public float calculateEndY() {
-        return startY.get() + (float)Math.sin(angle) * size;
+        return startY.get() + (float)Math.sin(angle) * size.get();
     }
 
     public void show() {
@@ -63,6 +59,6 @@ public class Ligament {
     public void showRadius() {
       strokeWeight(1);
       noFill();
-      ellipse(startX.get(), startY.get(), size*2, size*2);
+      ellipse(startX.get(), startY.get(), size.get()*2, size.get()*2);
     }
 }

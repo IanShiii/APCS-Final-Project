@@ -1,20 +1,17 @@
 Arm arm;
-PVector screenCenter;
+PVector simulationCenter;
 PVector poleGlobal;
 PVector pole;
+Slider slider;
 
 void setup() {
-  size(1000,550);
-  screenCenter = new PVector(width, height);
+  size(1400,700);
+  simulationCenter = new PVector(width / 4, height / 2);
   poleGlobal = new PVector(30,30);
-  pole = poleGlobal.copy().sub(screenCenter);
-  arm = new Arm(screenCenter.x/2, screenCenter.y/2);
-  arm.addLigament(40);
-  arm.addLigament(30);
-  arm.addLigament(90);
-  arm.addLigament(50);
-  arm.addLigament(20);
-  arm.addLigament(100);
+  pole = poleGlobal.copy().sub(simulationCenter);
+  arm = new Arm(simulationCenter.x, simulationCenter.y);
+  slider = new Slider("ligament 1", 30, 200, 500, 30, 30, 400);
+  arm.addLigament(slider);
   arm.setShowRadii(true);
 }
 
@@ -22,7 +19,7 @@ void draw() {
   background(173, 216, 230);
   textSize(30);
   text("Hold left to activate arm. Hold Right to move pole", 40, height - 40);
-  PVector mouse = new PVector(mouseX, mouseY).sub(new PVector(width/2, height/2));
+  PVector mouse = new PVector(mouseX, mouseY).sub(simulationCenter);
   
   // show pole
   textSize(15);
@@ -38,8 +35,11 @@ void draw() {
     //}
   } else if (mousePressed && (mouseButton == RIGHT)) {
     poleGlobal = new PVector(mouseX, mouseY);
-    pole = poleGlobal.copy().sub(screenCenter);
+    pole = poleGlobal.copy().sub(simulationCenter);
   } 
   
   arm.show();
+  slider.update();
+  slider.show();
+  text(slider.getValue(), 30, 30);
 }
