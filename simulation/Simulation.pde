@@ -12,10 +12,10 @@ void setup() {
   arm = new Arm(simulationCenter.x, simulationCenter.y);
   sliders = new ArrayList<Slider>();
   
-  sliders.add(new Slider("ligament 1", 30, 200, 30, 400));
-  sliders.add(new Slider("ligament 2", 30, 200, 30, 400));
-  sliders.add(new Slider("ligament 2", 30, 200, 30, 400));
-  sliders.add(new Slider("ligament 2", 30, 200, 30, 400));
+  sliders.add(new Slider("ligament 1", 30, 180, 30, 400));
+  sliders.add(new Slider("ligament 2", 30, 180, 30, 400));
+  sliders.add(new Slider("ligament 3", 30, 180, 30, 400));
+  sliders.add(new Slider("ligament 4", 30, 180, 30, 400));
   for (Slider slider : sliders) {
     arm.addLigament(slider);
   }
