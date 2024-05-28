@@ -31,6 +31,14 @@ public class Arm {
     }
   }
   
+  public void removeLigament() {
+    if (ligaments.isEmpty()) {
+      return;
+    }
+    
+    ligaments.remove(ligaments.size() - 1);
+  }
+  
   public float[] getLigamentLengths() {
     float[] ligamentLengths = new float[ligaments.size()];
     for (int i = 0; i < ligaments.size(); i++) {

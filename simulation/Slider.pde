@@ -8,12 +8,13 @@ public class Slider {
   private int sliderHeight;
   private int sliderLength;
   
-  public Slider(String description, int min, int max, int x, int y, int sliderHeight, int sliderLength) {
+  public Slider(String description, int min, int max, int sliderHeight, int sliderLength) {
     this.description = description;
     this.min = min;
     this.max = max;
-    this.x = x;
-    this.y = y;
+    this.value = (min + max)/2; // default value is the average
+    this.x = 0;
+    this.y = 0;
     this.sliderHeight = sliderHeight;
     this.sliderLength = sliderLength;
   }
@@ -39,7 +40,9 @@ public class Slider {
     setValueBasedOnMouse();
   }
   
-  public void show() {
+  public void show(int x, int y) {
+    this.x = x;
+    this.y = y;
     // background
     noFill();
     strokeWeight(3);

@@ -2,7 +2,7 @@ Arm arm;
 PVector simulationCenter;
 PVector poleGlobal;
 PVector pole;
-Slider slider;
+ArrayList<Slider> sliders;
 
 void setup() {
   size(1400,700);
@@ -10,8 +10,15 @@ void setup() {
   poleGlobal = new PVector(30,30);
   pole = poleGlobal.copy().sub(simulationCenter);
   arm = new Arm(simulationCenter.x, simulationCenter.y);
-  slider = new Slider("ligament 1", 30, 200, 500, 30, 30, 400);
-  arm.addLigament(slider);
+  sliders = new ArrayList<Slider>();
+  
+  sliders.add(new Slider("ligament 1", 30, 200, 30, 400));
+  sliders.add(new Slider("ligament 2", 30, 200, 30, 400));
+  sliders.add(new Slider("ligament 2", 30, 200, 30, 400));
+  sliders.add(new Slider("ligament 2", 30, 200, 30, 400));
+  for (Slider slider : sliders) {
+    arm.addLigament(slider);
+  }
   arm.setShowRadii(true);
 }
 
@@ -21,11 +28,20 @@ void draw() {
   text("Hold left to activate arm. Hold Right to move pole", 40, height - 40);
   PVector mouse = new PVector(mouseX, mouseY).sub(simulationCenter);
   
+  // sliders
+  for (int i = 0; i < sliders.size(); i++) {
+    Slider slider = sliders.get(i);
+    slider.update();
+    slider.show(910, 40 * (i + 1));
+  }
+  
   // show pole
-  textSize(15);
+  noFill();
   ellipse(poleGlobal.x, poleGlobal.y, 20, 20);
+  textSize(15);
   text("pole", poleGlobal.x - 5, poleGlobal.y + 5);
   
+  // arm and pole movements
   if (mousePressed && (mouseButton == LEFT)) {
     float[] angles = IKCalculations.calculateAngles(arm.getLigamentLengths(), mouse, arm.getMaxDistance(), pole);
     arm.setAngles(angles);
@@ -39,7 +55,4 @@ void draw() {
   } 
   
   arm.show();
-  slider.update();
-  slider.show();
-  text(slider.getValue(), 30, 30);
 }
