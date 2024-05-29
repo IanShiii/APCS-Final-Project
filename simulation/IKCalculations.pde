@@ -1,5 +1,5 @@
 public static class IKCalculations {
-  public static PVector[] getIntersections(PVector center1, float radius1, PVector center2, float radius2) {
+  private static PVector[] getIntersections(PVector center1, float radius1, PVector center2, float radius2) {
     PVector distanceVector = center2.copy().sub(center1);
     float distance = distanceVector.mag();
     
@@ -17,6 +17,7 @@ public static class IKCalculations {
     return intersections;
   }
   
+  // not sure why this works lol
   private static boolean isTriangleValid(float side1, float side2, float side3) {
     return (side1 + side2) >= side3 || (side1 + side3) >= side2 || (side2 + side3) >= side1;
   }

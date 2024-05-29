@@ -29,7 +29,7 @@ public class Ligament {
         return angle;
     }
 
-    public float getSize() {
+    public int getSize() {
         return size.get();
     }
 
