@@ -6,12 +6,14 @@ public class Arm {
   private float x;
   private float y;
   private boolean showRadii;
+  private boolean faded;
 
   public Arm(float x, float y) {
     ligaments = new LinkedList<Ligament>();
     this.x = x;
     this.y = y;
     this.showRadii = false;
+    this.faded = false;
   }
 
   public void addLigament(Slider slider) {
@@ -51,8 +53,22 @@ public class Arm {
     this.showRadii = showRadii;
   }
   
+  public void fade() {
+    this.faded = true;
+  }
+  
+  public void unFade() {
+    this.faded = false;
+  }
+  
   public void show() {
     for (Ligament ligament : ligaments) {
+      if (!faded) {
+        ligament.setColor(color(0, 0, 0));
+      }
+      else {
+        ligament.setColor(color(0, 0, 0, 100));
+      }
       ligament.show();
       if (showRadii) {
         ligament.showRadius();

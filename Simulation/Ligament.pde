@@ -5,12 +5,14 @@ public class Ligament {
     private Supplier<Float> startY;
     private float angle;
     private Supplier<Integer> size;
+    private color ligamentColor;
 
     public Ligament(Supplier<Float> startX, Supplier<Float> startY, float angle, Supplier<Integer> size) {
         this.startX = startX;
         this.startY = startY;
         this.angle = angle;
         this.size = size;
+        this.ligamentColor = color(0, 0, 0);
     }
 
     /**
@@ -36,6 +38,10 @@ public class Ligament {
     public void setAngle(float angle) {
         this.angle = angle;
     }
+    
+    public void setColor(color ligamentColor) {
+      this.ligamentColor = ligamentColor;
+    }
 
     /**
      * calculate end positions
@@ -53,6 +59,7 @@ public class Ligament {
         float endX = calculateEndX();
         float endY = calculateEndY();
         strokeWeight(11);
+        stroke(ligamentColor);
         line((float)startX.get(), (float)startY.get(), endX, endY);
     }
     
