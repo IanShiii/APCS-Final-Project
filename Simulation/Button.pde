@@ -24,6 +24,10 @@ public class Button {
     this.isAlreadyClicked = false;
   }
   
+  public void setText(String text) {
+    this.text = text;
+  }
+  
   public void setColor(color buttonColor) {
     this.buttonColor = buttonColor;
   }

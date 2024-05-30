@@ -1,10 +1,14 @@
-Arm arm;
+Arm IKArm;
+Arm PIDArm;
 PVector simulationCenter;
 PVector poleGlobal;
 PVector pole;
-ArrayList<Slider> sliders;
+ArrayList<Slider> ligamentSliders;
+ArrayList<Slider> PIDSliders;
 Button addButton;
 Button removeButton;
+Button pidSwitchButton;
+boolean isPIDOn;
 
 void setup() {
   size(1400,700);
@@ -13,31 +17,46 @@ void setup() {
   poleGlobal = new PVector(30,40);
   pole = poleGlobal.copy().sub(simulationCenter);
   
-  arm = new Arm(simulationCenter.x, simulationCenter.y);
-  arm.setShowRadii(true);
+  IKArm = new Arm(simulationCenter.x, simulationCenter.y);
+  IKArm.setShowRadii(true);
+  PIDArm = new Arm(simulationCenter.x, simulationCenter.y);
   
-  sliders = new ArrayList<Slider>();
-  sliders.add(new Slider("ligament 1", 30, 120, 30, 400));
-  sliders.add(new Slider("ligament 2", 30, 120, 30, 400));
-  arm.addLigament(sliders.get(0));
-  arm.addLigament(sliders.get(1));
+  ligamentSliders = new ArrayList<Slider>();
+  ligamentSliders.add(new Slider("ligament 1", 30, 120, 30, 400));
+  ligamentSliders.add(new Slider("ligament 2", 30, 120, 30, 400));
+  for (Slider slider : ligamentSliders) {
+    IKArm.addLigament(slider);
+    PIDArm.addLigament(slider);
+  }
   
   Procedure onAdd = () -> {
-    if (sliders.size() < 7) {
-      Slider slider = new Slider("ligament " + (sliders.size() + 1), 30, 120, 30, 400);
-      sliders.add(slider);
-      arm.addLigament(slider);
+    if (ligamentSliders.size() < 6) {
+      Slider slider = new Slider("ligament " + (ligamentSliders.size() + 1), 30, 120, 30, 400);
+      ligamentSliders.add(slider);
+      IKArm.addLigament(slider);
+      PIDArm.addLigament(slider);
     }
   };
   addButton = new Button("+", 50, 50, onAdd);
   
   Procedure onRemove = () -> {
-    if (sliders.size() > 1) {
-      sliders.remove(sliders.size() - 1);
-      arm.removeLigament();
+    if (ligamentSliders.size() > 1) {
+      ligamentSliders.remove(ligamentSliders.size() - 1);
+      IKArm.removeLigament();
+      PIDArm.removeLigament();
     }
   };
   removeButton = new Button("-", 50, 50, onRemove);
+  
+  Procedure pidSwitch = () -> {
+    if (isPIDOn) {
+      IKArm.unFade();
+    }
+    else {
+      IKArm.fade();
+    }
+  };
+  pidSwitchButton = new Button("PID: " + (isPIDOn ? "On" : "Off"), 100, 50, pidSwitch);
   
 }
 
@@ -49,8 +68,8 @@ void draw() {
   PVector mouse = new PVector(mouseX, mouseY).sub(simulationCenter);
   
   // sliders
-  for (int i = 0; i < sliders.size(); i++) {
-    Slider slider = sliders.get(i);
+  for (int i = 0; i < ligamentSliders.size(); i++) {
+    Slider slider = ligamentSliders.get(i);
     slider.update();
     slider.show(910, 40 * (i + 1));
   }
@@ -64,8 +83,8 @@ void draw() {
   
   // arm and pole movements
   if (mousePressed && (mouseButton == LEFT)) {
-    float[] angles = IKCalculations.calculateAngles(arm.getLigamentLengths(), mouse, arm.getMaxDistance(), pole);
-    arm.setAngles(angles);
+    float[] angles = IKCalculations.calculateAngles(IKArm.getLigamentLengths(), mouse, IKArm.getMaxDistance(), pole);
+    IKArm.setAngles(angles);
     //textSize(40);
     //for (int i = 0; i < angles.length; i++) {
     //  text(angles[i], 30, 40*(i+1));
@@ -77,9 +96,12 @@ void draw() {
   
   // buttons
   addButton.update();
-  addButton.show(910 + (400 / 2) - 25 - 50, sliders.size() * 40 + 60);
+  addButton.show(910 + (400 / 2) - 25 - 50, ligamentSliders.size() * 40 + 60);
   removeButton.update();
-  removeButton.show(910 + (400 / 2) -25 + 50, sliders.size() * 40 + 60);
+  removeButton.show(910 + (400 / 2) -25 + 50, ligamentSliders.size() * 40 + 60);
+  pidSwitchButton.setText("PID: " + (isPIDOn ? "On" : "Off"));
+  pidSwitchButton.update();
+  pidSwitchButton.show(width - 125, height - 75);
   
-  arm.show();
+  IKArm.show();
 }
