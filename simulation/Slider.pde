@@ -27,7 +27,7 @@ public class Slider {
     if (mousePressed && (mouseButton == LEFT)) {
       if (mouseY > y && mouseY < y + sliderHeight) {
         if(mouseX > x && mouseX < x + sliderLength) {
-          this.value = round((float)(mouseX - x) / sliderLength * max);
+          this.value = round((float)(mouseX - x) / sliderLength * (max - min)) + min;
         }
       }
     } 
@@ -48,8 +48,9 @@ public class Slider {
     strokeWeight(3);
     rect(x, y, sliderLength, sliderHeight);
     fill(255, 255, 255);
-    rect(x, y, (float)sliderLength * value / max, sliderHeight); 
+    rect(x, y, (float)sliderLength * (value - min) / (max - min), sliderHeight); 
     textSize(30);
+    textAlign(LEFT);
     text(description, x - textWidth(description) - 5, y + sliderHeight);
     text(value, x + sliderLength + 5, y + sliderHeight);
   }
