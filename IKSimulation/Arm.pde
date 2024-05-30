@@ -14,19 +14,29 @@ public class Arm {
     this.showRadii = false;
   }
 
-  public void addLigament(float length) {
+  public void addLigament(Slider slider) {
     if (ligaments.size() == 0) {
       Supplier<Float> startX = () -> x;
       Supplier<Float> startY = () -> y;
-      Ligament newLigament = new Ligament(startX, startY, 0, length);
+      Supplier<Integer> size = () -> slider.getValue();
+      Ligament newLigament = new Ligament(startX, startY, 0, size);
       ligaments.add(newLigament);
     } else {
       Ligament lastLigament = ligaments.getLast();
       Supplier<Float> startX = () -> lastLigament.calculateEndX();
       Supplier<Float> startY = () -> lastLigament.calculateEndY();
-      Ligament newLigament = new Ligament(startX, startY, 0, length);
+      Supplier<Integer> size = () -> slider.getValue();
+      Ligament newLigament = new Ligament(startX, startY, 0, size);
       ligaments.add(newLigament);
     }
+  }
+  
+  public void removeLigament() {
+    if (ligaments.isEmpty()) {
+      return;
+    }
+    
+    ligaments.remove(ligaments.size() - 1);
   }
   
   public float[] getLigamentLengths() {
