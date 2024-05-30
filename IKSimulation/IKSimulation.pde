@@ -18,7 +18,9 @@ void setup() {
   
   sliders = new ArrayList<Slider>();
   sliders.add(new Slider("ligament 1", 30, 120, 30, 400));
+  sliders.add(new Slider("ligament 2", 30, 120, 30, 400));
   arm.addLigament(sliders.get(0));
+  arm.addLigament(sliders.get(1));
   
   Procedure onAdd = () -> {
     if (sliders.size() < 7) {
