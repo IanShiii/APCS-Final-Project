@@ -45,8 +45,8 @@ public class Button {
         return;
       }
     }
-    if (!mousePressed) {
-      isAlreadyClicked = false;
+    else {
+      isAlreadyClicked = mousePressed;
     }
   }
   
