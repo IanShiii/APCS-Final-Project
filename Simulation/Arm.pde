@@ -6,6 +6,7 @@ public class Arm {
   private float x;
   private float y;
   private boolean showRadii;
+  private boolean hidden;
   private boolean faded;
 
   public Arm(float x, float y) {
@@ -13,21 +14,21 @@ public class Arm {
     this.x = x;
     this.y = y;
     this.showRadii = false;
-    this.faded = false;
+    this.hidden = false;
   }
 
   public void addLigament(Slider slider) {
     if (ligaments.size() == 0) {
       Supplier<Float> startX = () -> x;
       Supplier<Float> startY = () -> y;
-      Supplier<Integer> size = () -> slider.getValue();
+      Supplier<Integer> size = () -> (int)slider.getValue();
       Ligament newLigament = new Ligament(startX, startY, 0, size);
       ligaments.add(newLigament);
     } else {
       Ligament lastLigament = ligaments.getLast();
       Supplier<Float> startX = () -> lastLigament.calculateEndX();
       Supplier<Float> startY = () -> lastLigament.calculateEndY();
-      Supplier<Integer> size = () -> slider.getValue();
+      Supplier<Integer> size = () -> (int)slider.getValue();
       Ligament newLigament = new Ligament(startX, startY, 0, size);
       ligaments.add(newLigament);
     }
@@ -49,8 +50,12 @@ public class Arm {
     return ligamentLengths;
   }
   
-  public void setShowRadii(boolean showRadii) {
-    this.showRadii = showRadii;
+  public void showRadii() {
+    this.showRadii = true;
+  }
+  
+  public void hideRadii() {
+    this.showRadii = false;
   }
   
   public void fade() {
@@ -61,19 +66,12 @@ public class Arm {
     this.faded = false;
   }
   
-  public void show() {
-    for (Ligament ligament : ligaments) {
-      if (!faded) {
-        ligament.setColor(color(0, 0, 0));
-      }
-      else {
-        ligament.setColor(color(0, 0, 0, 100));
-      }
-      ligament.show();
-      if (showRadii) {
-        ligament.showRadius();
-      }
-    }
+  public void hide() {
+    this.hidden = true;
+  }
+  
+  public void unhide() {
+    this.hidden = false;
   }
   
   public float getMaxDistance() {
@@ -87,6 +85,27 @@ public class Arm {
   public void setAngles(float[] angles) {
     for (int i = 0; i < angles.length; i++) {
       ligaments.get(i).setAngle(angles[i]);
+    }
+  }
+  
+  public void show() {
+    if (faded) {
+      for (Ligament ligament : ligaments) {
+        ligament.setColor(color(0, 0, 0, 100));
+      }
+    }
+    else {
+      for (Ligament ligament : ligaments) {
+        ligament.setColor(color(0, 0, 0, 0));
+      }
+    }
+    if (!hidden) {
+      for (Ligament ligament : ligaments) {
+        ligament.show();
+        if (showRadii) {
+          ligament.showRadius();
+        }
+      }
     }
   }
 }
