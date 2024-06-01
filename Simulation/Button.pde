@@ -8,6 +8,7 @@ public class Button {
   private int buttonHeight;
   private Procedure onClick;
   private boolean isAlreadyClicked;
+  private boolean isHidden;
   
   public Button(String text, int buttonWidth, int buttonHeight, Procedure onClick) {
     this.x = 0;
@@ -30,6 +31,14 @@ public class Button {
   
   public void setColor(color buttonColor) {
     this.buttonColor = buttonColor;
+  }
+  
+  public void hide() {
+    this.isHidden = true;
+  }
+  
+  public void unhide() {
+    this.isHidden = false;
   }
   
   private boolean isMouseOverButton() {
@@ -58,20 +67,21 @@ public class Button {
     this.x = x;
     this.y = y;
     
-    color activeColor;
-    if (isMouseOverButton()) {
-      activeColor = hoverColor;
+    if (!isHidden) {
+      color activeColor;
+      if (isMouseOverButton()) {
+        activeColor = hoverColor;
+      }
+      else {
+        activeColor = buttonColor;
+      }
+      
+      fill(activeColor);
+      rect(x, y, buttonWidth, buttonHeight);
+      textAlign(CENTER);
+      fill(color(255, 255, 255));
+      textSize(30);
+      text(text, x + buttonWidth/2, y + buttonHeight/2 + 10);
     }
-    else {
-      activeColor = buttonColor;
-    }
-    
-    fill(activeColor);
-    rect(x, y, buttonWidth, buttonHeight);
-    textAlign(CENTER);
-    fill(color(255, 255, 255));
-    textSize(30);
-    text(text, x + buttonWidth/2, y + buttonHeight/2 + 10);
   }
-  
 }
