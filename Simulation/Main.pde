@@ -2,6 +2,8 @@ Arm IKArm;
 Arm PIDTargetArm;
 Arm PIDActualArm;
 
+PIDController controller;
+
 PVector simulationCenter;
 PVector poleGlobal;
 PVector pole;
@@ -44,9 +46,16 @@ void setup() {
   PIDLigamentSlider.hide();
   
   PIDSliders = new ArrayList<Slider>();
-  PIDSliders.add(new Slider("kP", 0, 5).makeNotDiscrete());
-  PIDSliders.add(new Slider("kI", 0, 5).makeNotDiscrete());
-  PIDSliders.add(new Slider("kD", 0, 5).makeNotDiscrete());
+  PIDSliders.add(new Slider("kP", 0, 3).makeNotDiscrete());
+  PIDSliders.add(new Slider("kI", 0, 3).makeNotDiscrete());
+  PIDSliders.add(new Slider("kD", 0, 3).makeNotDiscrete());
+  
+  controller = new PIDController(
+    () -> PIDSliders.get(0).getValue(),
+    () -> PIDSliders.get(1).getValue(),
+    () -> PIDSliders.get(2).getValue()
+   );
+    
   
   Procedure onAdd = () -> {
     if (ligamentSliders.size() < 6) {
@@ -104,13 +113,11 @@ void draw() {
   // sliders
   for (int i = 0; i < ligamentSliders.size(); i++) {
     Slider slider = ligamentSliders.get(i);
-    slider.update();
     slider.show(910, 40 * (i + 1));
   }
   
   for (int i = 0; i < PIDSliders.size(); i++) {
     Slider slider = PIDSliders.get(i);
-    slider.update();
     slider.show(910, 460 + 40 * i);
   }
   
@@ -142,6 +149,16 @@ void draw() {
   pidSwitchButton.setText("PID: " + (isPIDOn ? "On" : "Off"));
   pidSwitchButton.update();
   pidSwitchButton.show(width - 125, height - 75);
+  
+  // update PID Target Arm
+  if (isPIDOn) {
+    float output = 10 * controller.calculate(PIDTargetArm.getLigament(0).getAngle(), PIDActualArm.getLigament(0).getAngle());
+    PIDActualArm.getLigament(0).applyTorque(output);
+  }
+  
+  //text("target angle: " + PIDTargetArm.getLigament(0).getAngle(), 150, 200);
+  //text("actual angle: " + PIDActualArm.getLigament(0).getAngle(), 150, 300);
+
   
   // update and show arms 
   PIDActualArm.show();

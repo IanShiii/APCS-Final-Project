@@ -61,10 +61,6 @@ public class Slider {
     this.value = constrain(value, min, max);
   }
   
-  private void update() {
-    setValueBasedOnMouse();
-  }
-  
   public void show(int x, int y) {
     this.x = x;
     this.y = y;
@@ -84,7 +80,7 @@ public class Slider {
       else {
         text(value, x + sliderLength + 5, y + sliderHeight);
       }
-      update();
+      setValueBasedOnMouse();
     }
   }
 }
