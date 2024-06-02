@@ -1,5 +1,5 @@
 public class PIDController {
-    private static final float dt = 1;
+    private static final float DT = (float) 1 / 60;
 
     // Constants used by the PID controller
     private Supplier<Float> kP;
@@ -23,21 +23,25 @@ public class PIDController {
         integral = 0;
     }
 
-    protected float calculate(float setpoint, float measurement) {
+    public float calculate(float setpoint, float measurement) {
         float error = setpoint - measurement;
         
         // calculate P component
         float pOut = error * kP.get();
 
         // Calculate I Component
-        integral += error * dt;
+        integral += error * DT;
         float iOut = integral * kI.get();
 
         // Calculate D Component
-        float derivative = (error - lastError) / dt;
+        float derivative = (error - lastError) / DT;
         lastError = error;
         float dOut = derivative * kD.get();
-
+        
+        textAlign(LEFT);
+        text("pOut: " + pOut, 1050, 250);
+        text("iOut: " + iOut, 1050, 300);
+        text("dOut: " + dOut, 1050, 350);
         return pOut + iOut + dOut;
     }
 }
