@@ -22,16 +22,20 @@ public class Arm {
       Supplier<Float> startX = () -> x;
       Supplier<Float> startY = () -> y;
       Supplier<Integer> size = () -> (int)slider.getValue();
-      Ligament newLigament = new Ligament(startX, startY, 0, size);
+      Ligament newLigament = new Ligament(startX, startY, size);
       ligaments.add(newLigament);
     } else {
       Ligament lastLigament = ligaments.getLast();
       Supplier<Float> startX = () -> lastLigament.calculateEndX();
       Supplier<Float> startY = () -> lastLigament.calculateEndY();
       Supplier<Integer> size = () -> (int)slider.getValue();
-      Ligament newLigament = new Ligament(startX, startY, 0, size);
+      Ligament newLigament = new Ligament(startX, startY, size);
       ligaments.add(newLigament);
     }
+  }
+  
+  public Ligament getLigament(int index) {
+    return ligaments.get(index);
   }
   
   public void removeLigament() {
