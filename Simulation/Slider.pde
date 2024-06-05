@@ -47,18 +47,25 @@ public class Slider {
   
   private void setValueBasedOnMouse() {
     if (mousePressed && (mouseButton == LEFT)) {
-      if (mouseY > y && mouseY < y + sliderHeight) {
-        if(mouseX > x && mouseX < x + sliderLength) {
+      if (isMouseOverSlider()) {
           value = (float)(mouseX - x) / sliderLength * (max - min) + min;
           if (isDiscrete) {
             value = round(value);
           }
-        }
       }
     } 
     
     // safety
     this.value = constrain(value, min, max);
+  }
+  
+  public boolean isMouseOverSlider() {
+    if (mouseY > y && mouseY < y + sliderHeight) {
+        if(mouseX > x && mouseX < x + sliderLength) {
+          return true;
+        }
+    }
+    return false;
   }
   
   public void show(int x, int y) {

@@ -14,7 +14,7 @@ ArrayList<Slider> PIDSliders;
 
 Button addButton;
 Button removeButton;
-Button pidSwitchButton;
+Button PIDSwitchButton;
 
 boolean isPIDOn;
 
@@ -99,7 +99,7 @@ void setup() {
     }
     isPIDOn = !isPIDOn;
   };
-  pidSwitchButton = new Button("PID: " + (isPIDOn ? "On" : "Off"), 100, 50, pidSwitch);
+  PIDSwitchButton = new Button("PID: " + (isPIDOn ? "On" : "Off"), 100, 50, pidSwitch);
   
 }
 
@@ -140,24 +140,26 @@ void draw() {
   }
   
   // arm and pole movements
-  if (mousePressed && (mouseButton == LEFT)) {
-    float[] IKArmAngles = IKCalculations.calculateAngles(IKArm.getLigamentLengths(), mouse, IKArm.getMaxDistance(), pole);
-    IKArm.setAngles(IKArmAngles);
-    float[] PIDTargetArmAngles = IKCalculations.calculateAngles(PIDTargetArm.getLigamentLengths(), mouse, PIDTargetArm.getMaxDistance(), pole);
-    PIDTargetArm.setAngles(PIDTargetArmAngles);
-  } else if (!isPIDOn && mousePressed && (mouseButton == RIGHT)) {
-    poleGlobal = new PVector(mouseX, mouseY);
-    pole = poleGlobal.copy().sub(simulationCenter);
-  } 
+  if (!isMouseOverAnySliders() && !isMouseOverAnyButtons()) {
+    if (mousePressed && (mouseButton == LEFT)) {
+      float[] IKArmAngles = IKCalculations.calculateAngles(IKArm.getLigamentLengths(), mouse, IKArm.getMaxDistance(), pole);
+      IKArm.setAngles(IKArmAngles);
+      float[] PIDTargetArmAngles = IKCalculations.calculateAngles(PIDTargetArm.getLigamentLengths(), mouse, PIDTargetArm.getMaxDistance(), pole);
+      PIDTargetArm.setAngles(PIDTargetArmAngles);
+    } else if (!isPIDOn && mousePressed && (mouseButton == RIGHT)) {
+      poleGlobal = new PVector(mouseX, mouseY);
+      pole = poleGlobal.copy().sub(simulationCenter);
+    } 
+  }
   
   // buttons
   addButton.update();
   addButton.show(910 + (400 / 2) - 25 - 50, ligamentSliders.size() * 40 + 60);
   removeButton.update();
   removeButton.show(910 + (400 / 2) -25 + 50, ligamentSliders.size() * 40 + 60);
-  pidSwitchButton.setText("PID: " + (isPIDOn ? "On" : "Off"));
-  pidSwitchButton.update();
-  pidSwitchButton.show(width - 125, height - 75);
+  PIDSwitchButton.setText("PID: " + (isPIDOn ? "On" : "Off"));
+  PIDSwitchButton.update();
+  PIDSwitchButton.show(width - 125, height - 75);
   
   // update PID Target Arm
   if (isPIDOn) {
@@ -165,12 +167,40 @@ void draw() {
     PIDActualArm.getLigament(0).applyTorque(-output);
   }
   
-  //text("target angle: " + PIDTargetArm.getLigament(0).getAngle(), 150, 200);
-  //text("actual angle: " + PIDActualArm.getLigament(0).getAngle(), 150, 300);
-
-  
   // update and show arms 
   PIDActualArm.show();
   PIDTargetArm.show();
   IKArm.show();
+}
+
+boolean isMouseOverAnySliders() {
+  for (Slider slider : ligamentSliders) {
+    if (slider.isMouseOverSlider()) {
+      return true;
+    }
+  }
+  for (Slider slider : PIDSliders) {
+    if (slider.isMouseOverSlider()) {
+      return true;
+    }
+  }
+  if (PIDLigamentSlider.isMouseOverSlider()) {
+    return true;
+  }
+  return false;
+}
+
+boolean isMouseOverAnyButtons() {
+  if (!isPIDOn) {
+    if (addButton.isMouseOverButton() || addButton.isClicked()) {
+      return true;
+    }
+    if (removeButton.isMouseOverButton() || removeButton.isClicked()) {
+      return true;
+    }
+  }
+  if (PIDSwitchButton.isMouseOverButton() || PIDSwitchButton.isClicked()) {
+    return true;
+  }
+  return false;
 }

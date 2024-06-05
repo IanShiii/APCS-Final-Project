@@ -7,7 +7,8 @@ public class Button {
   private int buttonWidth;
   private int buttonHeight;
   private Procedure onClick;
-  private boolean isAlreadyClicked;
+  private boolean isMouseAlreadyClicked;
+  private boolean isButtonClicked;
   private boolean isHidden;
   
   public Button(String text, int buttonWidth, int buttonHeight, Procedure onClick) {
@@ -22,7 +23,12 @@ public class Button {
     this.hoverColor = color(constrain(red(buttonColor) - hoverDimLevel, 0, 255), constrain(green(buttonColor) - hoverDimLevel, 0, 255), constrain(blue(buttonColor) - hoverDimLevel, 0, 255));
     
     this.onClick = onClick;
-    this.isAlreadyClicked = false;
+    this.isMouseAlreadyClicked = false;
+  }
+  
+  // returns true from when button is clicked until user lets go of mouse
+  public boolean isClicked() {
+    return isButtonClicked;
   }
   
   public void setText(String text) {
@@ -41,7 +47,7 @@ public class Button {
     this.isHidden = false;
   }
   
-  private boolean isMouseOverButton() {
+  public boolean isMouseOverButton() {
     if (mouseX > x && mouseX < x + buttonWidth) {
       if (mouseY > y && mouseY< y + buttonHeight) {
         return true;
@@ -51,15 +57,19 @@ public class Button {
   }
   
   public void update() {
-    if (isMouseOverButton() && !isAlreadyClicked) {
+    if (isMouseOverButton() && !isMouseAlreadyClicked) {
       if (mousePressed && (mouseButton == LEFT)) {
         onClick.run();
-        isAlreadyClicked = true;
+        isMouseAlreadyClicked = true;
+        isButtonClicked = true;
         return;
       }
     }
     else {
-      isAlreadyClicked = mousePressed;
+      isMouseAlreadyClicked = mousePressed;
+      if (!mousePressed) {
+        isButtonClicked = false;
+      }
     }
   }
   
