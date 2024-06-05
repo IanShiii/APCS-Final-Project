@@ -66,7 +66,9 @@ public class Ligament {
     }
     
     private float calculateTorqueByGravity() {
-      return (float)(size.get() * Math.cos(angle) / 2);
+      float torque = (float)(size.get() * Math.cos(angle) / 2);
+      torque /= 5; // make gravity weaker
+      return torque;
     }
     
     public void applyTorque(float torque) {
@@ -80,6 +82,19 @@ public class Ligament {
       angularVelocity += angularAcceleration;
       
       angle = angle % (2*PI);
+    }
+    
+    public float findShortestAngleDifference(Ligament other) {
+      float difference = (other.getAngle() - this.getAngle()) % 360;
+      if (difference < -180) {
+        return difference + 360;
+      }
+      else if (difference > 179) {
+        return difference - 360;
+      }
+      else {
+        return difference;
+      }
     }
 
     public void show() {

@@ -46,9 +46,9 @@ void setup() {
   PIDLigamentSlider.hide();
   
   PIDSliders = new ArrayList<Slider>();
-  PIDSliders.add(new Slider("kP", 0, 3).makeNotDiscrete());
-  PIDSliders.add(new Slider("kI", 0, 3).makeNotDiscrete());
-  PIDSliders.add(new Slider("kD", 0, 3).makeNotDiscrete());
+  PIDSliders.add(new Slider("kP", 0, 4).makeNotDiscrete());
+  PIDSliders.add(new Slider("kI", 0, 1).makeNotDiscrete());
+  PIDSliders.add(new Slider("kD", 0, 4).makeNotDiscrete());
   
   controller = new PIDController(
     () -> PIDSliders.get(0).getValue(),
@@ -152,7 +152,7 @@ void draw() {
   
   // update PID Target Arm
   if (isPIDOn) {
-    float output = 10 * controller.calculate(PIDTargetArm.getLigament(0).getAngle(), PIDActualArm.getLigament(0).getAngle());
+    float output = 12 * controller.calculate(PIDActualArm.getLigament(0).findShortestAngleDifference(PIDTargetArm.getLigament(0)));
     PIDActualArm.getLigament(0).applyTorque(output);
   }
   
@@ -164,4 +164,7 @@ void draw() {
   PIDActualArm.show();
   PIDTargetArm.show();
   IKArm.show();
+  
+  text(PIDActualArm.getLigament(0).getAngle(), 300, 40);
+  text(PIDTargetArm.getLigament(0).getAngle(), 300, 100);
 }
