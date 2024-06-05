@@ -7,7 +7,9 @@ public class Button {
   private int buttonWidth;
   private int buttonHeight;
   private Procedure onClick;
-  private boolean isAlreadyClicked;
+  private boolean isMouseAlreadyClicked;
+  private boolean isButtonClicked;
+  private boolean isHidden;
   
   public Button(String text, int buttonWidth, int buttonHeight, Procedure onClick) {
     this.x = 0;
@@ -21,14 +23,31 @@ public class Button {
     this.hoverColor = color(constrain(red(buttonColor) - hoverDimLevel, 0, 255), constrain(green(buttonColor) - hoverDimLevel, 0, 255), constrain(blue(buttonColor) - hoverDimLevel, 0, 255));
     
     this.onClick = onClick;
-    this.isAlreadyClicked = false;
+    this.isMouseAlreadyClicked = false;
+  }
+  
+  // returns true from when button is clicked until user lets go of mouse
+  public boolean isClicked() {
+    return isButtonClicked;
+  }
+  
+  public void setText(String text) {
+    this.text = text;
   }
   
   public void setColor(color buttonColor) {
     this.buttonColor = buttonColor;
   }
   
-  private boolean isMouseOverButton() {
+  public void hide() {
+    this.isHidden = true;
+  }
+  
+  public void unhide() {
+    this.isHidden = false;
+  }
+  
+  public boolean isMouseOverButton() {
     if (mouseX > x && mouseX < x + buttonWidth) {
       if (mouseY > y && mouseY< y + buttonHeight) {
         return true;
@@ -38,15 +57,19 @@ public class Button {
   }
   
   public void update() {
-    if (isMouseOverButton() && !isAlreadyClicked) {
+    if (isMouseOverButton() && !isMouseAlreadyClicked) {
       if (mousePressed && (mouseButton == LEFT)) {
         onClick.run();
-        isAlreadyClicked = true;
+        isMouseAlreadyClicked = true;
+        isButtonClicked = true;
         return;
       }
     }
     else {
-      isAlreadyClicked = mousePressed;
+      isMouseAlreadyClicked = mousePressed;
+      if (!mousePressed) {
+        isButtonClicked = false;
+      }
     }
   }
   
@@ -54,20 +77,21 @@ public class Button {
     this.x = x;
     this.y = y;
     
-    color activeColor;
-    if (isMouseOverButton()) {
-      activeColor = hoverColor;
+    if (!isHidden) {
+      color activeColor;
+      if (isMouseOverButton()) {
+        activeColor = hoverColor;
+      }
+      else {
+        activeColor = buttonColor;
+      }
+      
+      fill(activeColor);
+      rect(x, y, buttonWidth, buttonHeight);
+      textAlign(CENTER);
+      fill(color(255, 255, 255));
+      textSize(30);
+      text(text, x + buttonWidth/2, y + buttonHeight/2 + 10);
     }
-    else {
-      activeColor = buttonColor;
-    }
-    
-    fill(activeColor);
-    rect(x, y, buttonWidth, buttonHeight);
-    textAlign(CENTER);
-    fill(color(255, 255, 255));
-    textSize(30);
-    text(text, x + buttonWidth/2, y + buttonHeight/2 + 10);
   }
-  
 }
