@@ -14,7 +14,7 @@ public class Slider {
     this.description = description;
     this.min = min;
     this.max = max;
-    this.value = (min + max)/2; // default value is the average
+    this.value = ((float)min + max)/2; // default value is the average
     this.x = 0;
     this.y = 0;
     this.sliderHeight = 30;
