@@ -46,9 +46,9 @@ void setup() {
   PIDLigamentSlider.hide();
   
   PIDSliders = new ArrayList<Slider>();
-  PIDSliders.add(new Slider("kP", 0, 4).makeNotDiscrete());
-  PIDSliders.add(new Slider("kI", 0, 1).makeNotDiscrete());
-  PIDSliders.add(new Slider("kD", 0, 4).makeNotDiscrete());
+  PIDSliders.add(new Slider("kP", 0, 8).makeNotDiscrete());
+  PIDSliders.add(new Slider("kI", 0, 2).makeNotDiscrete());
+  PIDSliders.add(new Slider("kD", 0, 8).makeNotDiscrete());
   
   controller = new PIDController(
     () -> PIDSliders.get(0).getValue(),
@@ -105,10 +105,17 @@ void setup() {
 
 void draw() {
   background(173, 216, 230);
+  PVector mouse = new PVector(mouseX, mouseY).sub(simulationCenter);
+  
+  // instructions
   textSize(30);
   textAlign(LEFT);
-  text("Hold left to activate arm. Hold Right to move pole", 40, height - 40);
-  PVector mouse = new PVector(mouseX, mouseY).sub(simulationCenter);
+  if (isPIDOn) {
+    text("Hold left to move target.", 40, height - 40);
+  }
+  else {
+    text("Hold left to activate arm. Hold Right to move pole", 40, height - 40);
+  }
   
   // sliders
   for (int i = 0; i < ligamentSliders.size(); i++) {
@@ -124,11 +131,13 @@ void draw() {
   PIDLigamentSlider.show(910, 40);
   
   // show pole
-  noFill();
-  ellipse(poleGlobal.x, poleGlobal.y, 20, 20);
-  textSize(20);
-  textAlign(CENTER);
-  text("pole", poleGlobal.x, poleGlobal.y - 20);
+  if (!isPIDOn) {
+    noFill();
+    ellipse(poleGlobal.x, poleGlobal.y, 20, 20);
+    textSize(20);
+    textAlign(CENTER);
+    text("pole", poleGlobal.x, poleGlobal.y - 20);
+  }
   
   // arm and pole movements
   if (mousePressed && (mouseButton == LEFT)) {
@@ -136,7 +145,7 @@ void draw() {
     IKArm.setAngles(IKArmAngles);
     float[] PIDTargetArmAngles = IKCalculations.calculateAngles(PIDTargetArm.getLigamentLengths(), mouse, PIDTargetArm.getMaxDistance(), pole);
     PIDTargetArm.setAngles(PIDTargetArmAngles);
-  } else if (mousePressed && (mouseButton == RIGHT)) {
+  } else if (!isPIDOn && mousePressed && (mouseButton == RIGHT)) {
     poleGlobal = new PVector(mouseX, mouseY);
     pole = poleGlobal.copy().sub(simulationCenter);
   } 
@@ -152,8 +161,8 @@ void draw() {
   
   // update PID Target Arm
   if (isPIDOn) {
-    float output = 12 * controller.calculate(PIDActualArm.getLigament(0).findShortestAngleDifference(PIDTargetArm.getLigament(0)));
-    PIDActualArm.getLigament(0).applyTorque(output);
+    float output = 20 * controller.calculate(PIDTargetArm.getLigament(0).findShortestAngleDifference(PIDActualArm.getLigament(0)));
+    PIDActualArm.getLigament(0).applyTorque(-output);
   }
   
   //text("target angle: " + PIDTargetArm.getLigament(0).getAngle(), 150, 200);
@@ -164,7 +173,4 @@ void draw() {
   PIDActualArm.show();
   PIDTargetArm.show();
   IKArm.show();
-  
-  text(PIDActualArm.getLigament(0).getAngle(), 300, 40);
-  text(PIDTargetArm.getLigament(0).getAngle(), 300, 100);
 }
