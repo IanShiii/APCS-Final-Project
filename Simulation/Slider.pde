@@ -27,6 +27,13 @@ public class Slider {
     return value;
   }
   
+  public void setValue (float value) {
+    this.value = value;
+    if (isDiscrete) {
+      value = round(value);
+    }
+  }
+  
   public Slider makeDiscrete() {
     this.isDiscrete = true;
     return this;
