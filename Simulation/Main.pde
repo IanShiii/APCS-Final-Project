@@ -55,21 +55,22 @@ void setup() {
   kISlider = new Slider("kI", 0, 2).makeNotDiscrete();
   kDSlider = new Slider("kD", 0, 8).makeNotDiscrete();
   
-  zeroP = new Button("Zero", 60, 30, () -> {
-    kPSlider.setValue(0);
-  });
-  zeroI = new Button("Zero", 60, 30, () -> {
-    kISlider.setValue(0);
-  });
-  zeroD = new Button("Zero", 60, 30, () -> {
-    kDSlider.setValue(0);
-  });
-  
   controller = new PIDController(
     () -> kPSlider.getValue(),
     () -> kISlider.getValue(),
     () -> kDSlider.getValue()
    );
+   
+  zeroP = new Button("Zero", 60, 30, () -> {
+    kPSlider.setValue(0);
+  });
+  zeroI = new Button("Zero", 60, 30, () -> {
+    kISlider.setValue(0);
+    controller.reset();
+  });
+  zeroD = new Button("Zero", 60, 30, () -> {
+    kDSlider.setValue(0);
+  });
     
   
   Procedure onAdd = () -> {

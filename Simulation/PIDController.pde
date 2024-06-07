@@ -30,7 +30,9 @@ public class PIDController {
         float pOut = error * kP.get();
 
         // Calculate I Component
-        integral += error * DT;
+        if (kI.get() > 0) {
+          integral += error * DT;
+        }
         float iOut = integral * kI.get();
 
         // Calculate D Component
@@ -51,7 +53,9 @@ public class PIDController {
         float pOut = error * kP.get();
 
         // Calculate I Component
-        integral += error * DT;
+        if (kI.get() > 0) {
+          integral += error * DT;
+        }
         float iOut = integral * kI.get();
 
         // Calculate D Component

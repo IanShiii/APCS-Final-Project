@@ -79,13 +79,13 @@ public class Ligament {
     
     private void applyFriction() {
       if (angularVelocity < 0) {
-        angularVelocity += .00001;
+        angularVelocity += .000005;
         if (angularVelocity > 0) {
           angularVelocity = 0;
         }
       }
       if (angularVelocity > 0) {
-        angularVelocity -= .00001;
+        angularVelocity -= .000005;
         if (angularVelocity < 0) {
           angularVelocity = 0;
         }
