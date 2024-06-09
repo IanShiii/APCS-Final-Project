@@ -20,7 +20,7 @@ Button zeroD;
 
 Button addButton;
 Button removeButton;
-Button PIDSwitchButton;
+Button switchSimulationButton;
 
 boolean isPIDOn;
 
@@ -115,7 +115,7 @@ void setup() {
     }
     isPIDOn = !isPIDOn;
   };
-  PIDSwitchButton = new Button("PID: " + (isPIDOn ? "On" : "Off"), 100, 50, pidSwitch);
+  switchSimulationButton = new Button(isPIDOn ? "IK Simulation" : "PID Simulation", 200, 50, pidSwitch);
   
 }
 
@@ -173,10 +173,10 @@ void draw() {
   
   removeButton.update();
   removeButton.show(910 + (400 / 2) -25 + 50, ligamentSliders.size() * 40 + 60);
-  
-  PIDSwitchButton.setText("PID: " + (isPIDOn ? "On" : "Off"));
-  PIDSwitchButton.update();
-  PIDSwitchButton.show(width - 125, height - 75);
+
+  switchSimulationButton.setText(isPIDOn ? "IK Simulation" : "PID Simulation");
+  switchSimulationButton.update();
+  switchSimulationButton.show(width - 225, height - 75);
   
   zeroP.update();
   zeroP.show(800, 460);
@@ -221,7 +221,7 @@ boolean isMouseOverAnyButtons() {
       return true;
     }
   }
-  if (PIDSwitchButton.isMouseOverButton() || PIDSwitchButton.isClicked()) {
+  if (switchSimulationButton.isMouseOverButton() || switchSimulationButton.isClicked()) {
     return true;
   }
   if (zeroP.isMouseOverButton() || zeroI.isMouseOverButton() || zeroD.isMouseOverButton()) {
