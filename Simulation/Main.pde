@@ -14,7 +14,7 @@ ArrayList<Slider> PIDSliders;
 
 Button addButton;
 Button removeButton;
-Button PIDSwitchButton;
+Button switchSimulationButton;
 
 boolean isPIDOn;
 
@@ -99,7 +99,7 @@ void setup() {
     }
     isPIDOn = !isPIDOn;
   };
-  PIDSwitchButton = new Button("PID: " + (isPIDOn ? "On" : "Off"), 100, 50, pidSwitch);
+  switchSimulationButton = new Button(isPIDOn ? "Switch to IK" : "Switch to PID", 200, 50, pidSwitch);
   
 }
 
@@ -157,9 +157,9 @@ void draw() {
   addButton.show(910 + (400 / 2) - 25 - 50, ligamentSliders.size() * 40 + 60);
   removeButton.update();
   removeButton.show(910 + (400 / 2) -25 + 50, ligamentSliders.size() * 40 + 60);
-  PIDSwitchButton.setText("PID: " + (isPIDOn ? "On" : "Off"));
-  PIDSwitchButton.update();
-  PIDSwitchButton.show(width - 125, height - 75);
+  switchSimulationButton.setText(isPIDOn ? "Switch to IK" : "Switch to PID");
+  switchSimulationButton.update();
+  switchSimulationButton.show(width - 225, height - 75);
   
   // update PID Target Arm
   if (isPIDOn) {
@@ -199,7 +199,7 @@ boolean isMouseOverAnyButtons() {
       return true;
     }
   }
-  if (PIDSwitchButton.isMouseOverButton() || PIDSwitchButton.isClicked()) {
+  if (switchSimulationButton.isMouseOverButton() || switchSimulationButton.isClicked()) {
     return true;
   }
   return false;
