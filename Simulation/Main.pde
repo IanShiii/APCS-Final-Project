@@ -99,7 +99,7 @@ void setup() {
     }
     isPIDOn = !isPIDOn;
   };
-  switchSimulationButton = new Button(isPIDOn ? "Switch to IK" : "Switch to PID", 200, 50, pidSwitch);
+  switchSimulationButton = new Button(isPIDOn ? "IK Simulation" : "PID Simulation", 200, 50, pidSwitch);
   
 }
 
@@ -157,7 +157,7 @@ void draw() {
   addButton.show(910 + (400 / 2) - 25 - 50, ligamentSliders.size() * 40 + 60);
   removeButton.update();
   removeButton.show(910 + (400 / 2) -25 + 50, ligamentSliders.size() * 40 + 60);
-  switchSimulationButton.setText(isPIDOn ? "Switch to IK" : "Switch to PID");
+  switchSimulationButton.setText(isPIDOn ? "IK Simulation" : "PID Simulation");
   switchSimulationButton.update();
   switchSimulationButton.show(width - 225, height - 75);
   
