@@ -10,7 +10,13 @@ PVector pole;
 
 ArrayList<Slider> ligamentSliders;
 Slider PIDLigamentSlider;
-ArrayList<Slider> PIDSliders;
+Slider kPSlider;
+Slider kISlider;
+Slider kDSlider;
+
+Button zeroP;
+Button zeroI;
+Button zeroD;
 
 Button addButton;
 Button removeButton;
@@ -45,16 +51,26 @@ void setup() {
   PIDTargetArm.addLigament(PIDLigamentSlider);
   PIDLigamentSlider.hide();
   
-  PIDSliders = new ArrayList<Slider>();
-  PIDSliders.add(new Slider("kP", 0, 8).makeNotDiscrete());
-  PIDSliders.add(new Slider("kI", 0, 2).makeNotDiscrete());
-  PIDSliders.add(new Slider("kD", 0, 8).makeNotDiscrete());
+  kPSlider = new Slider("kP", 0, 8).makeNotDiscrete();
+  kISlider = new Slider("kI", 0, 2).makeNotDiscrete();
+  kDSlider = new Slider("kD", 0, 8).makeNotDiscrete();
   
   controller = new PIDController(
-    () -> PIDSliders.get(0).getValue(),
-    () -> PIDSliders.get(1).getValue(),
-    () -> PIDSliders.get(2).getValue()
+    () -> kPSlider.getValue(),
+    () -> kISlider.getValue(),
+    () -> kDSlider.getValue()
    );
+   
+  zeroP = new Button("Zero", 60, 30, () -> {
+    kPSlider.setValue(0);
+  });
+  zeroI = new Button("Zero", 60, 30, () -> {
+    kISlider.setValue(0);
+    controller.reset();
+  });
+  zeroD = new Button("Zero", 60, 30, () -> {
+    kDSlider.setValue(0);
+  });
     
   
   Procedure onAdd = () -> {
@@ -123,11 +139,10 @@ void draw() {
     slider.show(910, 40 * (i + 1));
   }
   
-  for (int i = 0; i < PIDSliders.size(); i++) {
-    Slider slider = PIDSliders.get(i);
-    slider.show(910, 460 + 40 * i);
-  }
-  
+  kPSlider.show(910, 460);
+  kISlider.show(910, 500);
+  kDSlider.show(910, 540);
+
   PIDLigamentSlider.show(910, 40);
   
   // show pole
@@ -155,11 +170,20 @@ void draw() {
   // buttons
   addButton.update();
   addButton.show(910 + (400 / 2) - 25 - 50, ligamentSliders.size() * 40 + 60);
+  
   removeButton.update();
   removeButton.show(910 + (400 / 2) -25 + 50, ligamentSliders.size() * 40 + 60);
+
   switchSimulationButton.setText(isPIDOn ? "IK Simulation" : "PID Simulation");
   switchSimulationButton.update();
   switchSimulationButton.show(width - 225, height - 75);
+  
+  zeroP.update();
+  zeroP.show(800, 460);
+  zeroI.update();
+  zeroI.show(800, 500);
+  zeroD.update();
+  zeroD.show(800, 540);
   
   // update PID Target Arm
   if (isPIDOn) {
@@ -179,10 +203,8 @@ boolean isMouseOverAnySliders() {
       return true;
     }
   }
-  for (Slider slider : PIDSliders) {
-    if (slider.isMouseOverSlider()) {
-      return true;
-    }
+  if (kPSlider.isMouseOverSlider() || kISlider.isMouseOverSlider() || kDSlider.isMouseOverSlider()) {
+    return true;
   }
   if (PIDLigamentSlider.isMouseOverSlider()) {
     return true;
@@ -200,6 +222,9 @@ boolean isMouseOverAnyButtons() {
     }
   }
   if (switchSimulationButton.isMouseOverButton() || switchSimulationButton.isClicked()) {
+    return true;
+  }
+  if (zeroP.isMouseOverButton() || zeroI.isMouseOverButton() || zeroD.isMouseOverButton()) {
     return true;
   }
   return false;
