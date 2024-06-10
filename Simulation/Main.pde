@@ -139,9 +139,11 @@ void draw() {
     slider.show(910, 40 * (i + 1));
   }
   
-  kPSlider.show(910, 460);
-  kISlider.show(910, 500);
-  kDSlider.show(910, 540);
+  if (isPIDOn) {
+    kPSlider.show(910, 460);
+    kISlider.show(910, 500);
+    kDSlider.show(910, 540);
+  }
 
   PIDLigamentSlider.show(910, 40);
   
@@ -178,12 +180,14 @@ void draw() {
   switchSimulationButton.update();
   switchSimulationButton.show(width - 225, height - 75);
   
-  zeroP.update();
-  zeroP.show(800, 460);
-  zeroI.update();
-  zeroI.show(800, 500);
-  zeroD.update();
-  zeroD.show(800, 540);
+  if (isPIDOn) {
+    zeroP.update();
+    zeroP.show(800, 460);
+    zeroI.update();
+    zeroI.show(800, 500);
+    zeroD.update();
+    zeroD.show(800, 540);
+  }
   
   // update PID Target Arm
   if (isPIDOn) {
